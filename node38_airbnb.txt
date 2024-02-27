@@ -1,0 +1,209 @@
+# Table NguoiDung
+CREATE TABLE nguoi_dung(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	full_name VARCHAR(100),
+	email VARCHAR(100),
+	pass_word VARCHAR(100),
+	phone VARCHAR(20),
+	birth_day VARCHAR(20),
+	gender VARCHAR(20),
+	role VARCHAR(50),
+	avatar VARCHAR(1000)
+);
+
+# Table ViTri
+CREATE TABLE vi_tri(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	ten_vi_tri VARCHAR(100),
+	tinh_thanh VARCHAR(100),
+	quoc_gia VARCHAR(100),
+	hinh_anh VARCHAR(1000)
+);
+
+# Table Phong
+CREATE TABLE phong(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	ten_phong VARCHAR(200),
+	khach INT,
+	phong_ngu INT,
+	giuong INT,
+	phong_tam INT,
+	mo_ta VARCHAR(1000),
+	gia_tien INT,
+	may_giat BOOLEAN,
+	ban_la BOOLEAN,
+	tivi BOOLEAN,
+	dieu_hoa BOOLEAN,
+	wifi BOOLEAN,
+	bep BOOLEAN,
+	do_xe BOOLEAN,
+	ho_boi BOOLEAN,
+	ban_ui BOOLEAN,
+	ma_vi_tri INT,
+	FOREIGN KEY (ma_vi_tri) REFERENCES vi_tri(id),
+	hinh_anh VARCHAR(1000) 
+);
+
+# Table BinhLuan
+CREATE TABLE binh_luan(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	ma_phong INT,
+	FOREIGN KEY (ma_phong) REFERENCES phong(id),
+	ma_nguoi_binh_luan INT,
+	FOREIGN KEY (ma_nguoi_binh_luan) REFERENCES nguoi_dung(id),
+	ngay_binh_luan DATE,
+	noi_dung VARCHAR(1000),
+	sao_binh_luan INT
+);
+
+# Table DatPhong
+CREATE TABLE dat_phong(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	ma_phong INT,
+	FOREIGN KEY (ma_phong) REFERENCES phong(id),
+	ngay_den DATE,
+	ngay_di DATE,
+	so_luong_khach INT,
+	ma_nguoi_dat INT,
+	FOREIGN KEY (ma_nguoi_dat) REFERENCES nguoi_dung(id)
+);
+
+# INSERT DATA
+
+# NguoiDung
+INSERT INTO nguoi_dung (full_name, email, pass_word, phone, birth_day, gender, role, avatar)
+VALUES
+('Nguyen Van A', 'nguyenvana@example.com', 'hashed_password_1', '123456789', '1990-05-15', 'Male', 'true', 'avatar_a.jpg'),
+('Tran Thi B', 'tranthib@example.com', 'hashed_password_2', '987654321', '1985-08-21', 'Female', 'false', 'avatar_b.jpg'),
+('Le Van C', 'levanc@example.com', 'hashed_password_3', '456789123', '1995-03-10', 'Male', 'false', 'avatar_c.jpg'),
+('Pham Thi D', 'phamthid@example.com', 'hashed_password_4', '741852963', '1992-11-30', 'Female', 'false', 'avatar_d.jpg'),
+('Hoang Van E', 'hoangvane@example.com', 'hashed_password_5', '369258147', '1988-07-05', 'Male', 'true', 'avatar_e.jpg'),
+('Nguyen Van F', 'nguyenvanf@example.com', 'hashed_password_6', '654321987', '1993-02-18', 'Male', 'false', 'avatar_f.jpg'),
+('Tran Thi G', 'tranthig@example.com', 'hashed_password_7', '159487263', '1987-09-25', 'Female', 'true', 'avatar_g.jpg'),
+('Quach Van H', 'levanh@example.com', 'hashed_password_8', '852963741', '1998-06-14', 'Male', 'false', 'avatar_h.jpg'),
+('Pham Thi I', 'phamthii@example.com', 'hashed_password_9', '369147258', '1994-12-08', 'Female', 'false', 'avatar_i.jpg'),
+('Lam Van J', 'hoangvanj@example.com', 'hashed_password_10', '741258963', '1989-04-20', 'Male', 'true', 'avatar_j.jpg'),
+('Nguyen Van K', 'nguyenvank@example.com', 'hashed_password_11', '123654789', '1991-10-02', 'Male', 'false', 'avatar_k.jpg'),
+('Le Thi L', 'tranthil@example.com', 'hashed_password_12', '987123654', '1986-01-17', 'Female', 'false', 'avatar_l.jpg'),
+('Le Van M', 'levanm@example.com', 'hashed_password_13', '456321789', '1997-07-23', 'Male', 'false', 'avatar_m.jpg'),
+('Ly Thi N', 'phamthin@example.com', 'hashed_password_14', '789654123', '1999-05-05', 'Female', 'true', 'avatar_n.jpg'),
+('Tran Van O', 'hoangvano@example.com', 'hashed_password_15', '321654987', '1984-11-12', 'Male', 'false', 'avatar_o.jpg'),
+('Nguyen Van P', 'nguyenvanp@example.com', 'hashed_password_16', '456987321', '1996-03-28', 'Male', 'true', 'avatar_p.jpg'),
+('Tran Thi Q', 'tranthiq@example.com', 'hashed_password_17', '987456321', '1990-08-03', 'Female', 'false', 'avatar_q.jpg'),
+('Le Van R', 'levanr@example.com', 'hashed_password_18', '654789123', '1985-04-15', 'Male', 'false', 'avatar_r.jpg'),
+('Hoai Thi S', 'phamthis@example.com', 'hashed_password_19', '147852369', '1992-12-20', 'Female', 'false', 'avatar_s.jpg'),
+('Ho Van T', 'hoangvant@example.com', 'hashed_password_20', '987321654', '1988-06-09', 'Male', 'true', 'avatar_t.jpg'),
+('Ngo Van U', 'nguyenvanu@example.com', 'hashed_password_21', '369147852', '1995-01-31', 'Male', 'false', 'avatar_u.jpg'),
+('Tran Thi V', 'tranthiv@example.com', 'hashed_password_22', '852369147', '1983-09-08', 'Female', 'false', 'avatar_v.jpg'),
+('Ngo Van X', 'levanx@example.com', 'hashed_password_23', '123789456', '1992-07-11', 'Male', 'false', 'avatar_x.jpg'),
+('Lam Thi Y', 'phamthiy@example.com', 'hashed_password_24', '456123789', '1986-02-26', 'Female', 'true', 'avatar_y.jpg'),
+('Ho Van Z', 'hoangvanz@example.com', 'hashed_password_25', '789321654', '1994-04-05', 'Male', 'false', 'avatar_z.jpg');
+
+
+# ViTri
+INSERT INTO vi_tri (ten_vi_tri, tinh_thanh, quoc_gia, hinh_anh) VALUES
+('Downtown Area', 'Ho Chi Minh City', 'Vietnam', 'path/to/downtown.jpg'),
+('Beachfront Resort', 'Phuket', 'Thailand', 'path/to/beachfront-resort.jpg'),
+('Mountain Retreat', 'Dalat', 'Vietnam', 'path/to/mountain-retreat.jpg'),
+('City Center', 'Tokyo', 'Japan', 'path/to/city-center.jpg'),
+('Seaside Villa', 'Nice', 'France', 'path/to/seaside-villa.jpg'),
+('Riverside View', 'Can Tho', 'Vietnam', 'path/to/riverside-view.jpg'),
+('Skyline Heights', 'Seoul', 'South Korea', 'path/to/skyline-heights.jpg'),
+('Island Paradise', 'Bali', 'Indonesia', 'path/to/island-paradise.jpg'),
+('Historic District', 'Kyoto', 'Japan', 'path/to/historic-district.jpg'),
+('Garden Oasis', 'Singapore', 'Singapore', 'path/to/garden-oasis.jpg'),
+('Lakefront Retreat', 'Hanoi', 'Vietnam', 'path/to/lakefront-retreat.jpg'),
+('Urban Loft', 'New York City', 'United States', 'path/to/urban-loft.jpg'),
+('Desert Escape', 'Dubai', 'United Arab Emirates', 'path/to/desert-escape.jpg'),
+('Ski Chalet', 'Chamonix', 'France', 'path/to/ski-chalet.jpg'),
+('Tropical Hideaway', 'Phuket', 'Thailand', 'path/to/tropical-hideaway.jpg'),
+('Countryside Cottage', 'Oxford', 'United Kingdom', 'path/to/countryside-cottage.jpg'),
+('Oceanfront Condo', 'Miami', 'United States', 'path/to/oceanfront-condo.jpg'),
+('Cityscape Penthouse', 'Sydney', 'Australia', 'path/to/cityscape-penthouse.jpg'),
+('Forest Cabin', 'Vancouver', 'Canada', 'path/to/forest-cabin.jpg'),
+('Historical Landmark', 'Rome', 'Italy', 'path/to/historical-landmark.jpg'),
+('Luxury Yacht', 'Monaco', 'Monaco', 'path/to/luxury-yacht.jpg'),
+('Meadow View', 'Zurich', 'Switzerland', 'path/to/meadow-view.jpg'),
+('Lakeside Mansion', 'Geneva', 'Switzerland', 'path/to/lakeside-mansion.jpg'),
+('Skyscraper Oasis', 'Shanghai', 'China', 'path/to/skyscraper-oasis.jpg'),
+('Rural Farmhouse', 'Auckland', 'New Zealand', 'path/to/rural-farmhouse.jpg');
+
+# Phong
+INSERT INTO phong (ten_phong, khach, phong_ngu, giuong, phong_tam, mo_ta, gia_tien, may_giat, ban_la, tivi, dieu_hoa, wifi, bep, do_xe, ho_boi, ban_ui, ma_vi_tri, hinh_anh) VALUES
+('Deluxe Suite', 2, 1, 1, 1, 'Spacious deluxe suite with a stunning view.', 1500, true, true, true, true, true, true, true, false, true, 1, 'path/to/deluxe-suite.jpg'),
+('Standard Room', 1, 1, 1, 1, 'Comfortable standard room for a relaxing stay.', 800, false, true, true, true, true, true, false, false, false, 2, 'path/to/standard-room.jpg'),
+('Family Suite', 4, 2, 2, 2, 'Perfect for a family getaway with ample space.', 2000, true, true, true, true, true, true, true, true, true, 3, 'path/to/family-suite.jpg'),
+('Executive Suite', 2, 1, 1, 1, 'Luxurious executive suite with top-notch amenities.', 2500, true, true, true, true, true, true, true, true, true, 4, 'path/to/executive-suite.jpg'),
+('Cozy Cabin', 2, 1, 1, 1, 'A charming cabin for a cozy and intimate stay.', 1200, false, true, true, true, true, true, false, false, false, 5, 'path/to/cozy-cabin.jpg'),
+('Spacious Suite', 3, 2, 2, 1, 'Expansive suite with a modern design.', 1800, true, true, true, true, true, true, true, true, true, 6, 'path/to/spacious-suite.jpg'),
+('Ocean View Room', 2, 1, 1, 1, 'Room with a breathtaking view of the ocean.', 1000, false, true, true, true, true, true, false, false, false, 7, 'path/to/ocean-view-room.jpg'),
+('Luxury Apartment', 4, 2, 2, 2, 'High-end apartment with luxurious amenities.', 2800, true, true, true, true, true, true, true, true, true, 8, 'path/to/luxury-apartment.jpg'),
+('Rustic Retreat', 2, 1, 1, 1, 'Quaint retreat with a rustic charm.', 1100, false, true, true, true, true, true, false, false, false, 9, 'path/to/rustic-retreat.jpg'),
+('Penthouse Suite', 3, 2, 2, 2, 'Exclusive penthouse suite with panoramic views.', 3200, true, true, true, true, true, true, true, true, true, 10, 'path/to/penthouse-suite.jpg'),
+('Country Cottage', 2, 1, 1, 1, 'Cozy cottage in the heart of the countryside.', 1300, false, true, true, true, true, true, false, false, false, 11, 'path/to/country-cottage.jpg'),
+('Sky High Studio', 2, 1, 1, 1, 'Studio apartment with stunning city views.', 1500, false, true, true, true, true, true, false, false, false, 12, 'path/to/sky-high-studio.jpg'),
+('Beach Bungalow', 3, 1, 2, 1, 'Charming bungalow steps away from the beach.', 2000, true, true, true, true, true, true, true, true, true, 13, 'path/to/beach-bungalow.jpg'),
+('Serenity Suite', 2, 1, 1, 1, 'Tranquil suite for a peaceful retreat.', 1400, false, true, true, true, true, true, false, false, false, 14, 'path/to/serenity-suite.jpg'),
+('Urban Escape', 4, 2, 2, 2, 'Escape to the city with this modern urban space.', 2400, true, true, true, true, true, true, true, true, true, 15, 'path/to/urban-escape.jpg'),
+('Classic Room', 1, 1, 1, 1, 'Timeless classic room for a comfortable stay.', 900, false, true, true, true, true, true, false, false, false, 16, 'path/to/classic-room.jpg'),
+('Mountain Lodge', 2, 1, 1, 1, 'Lodge with a view nestled in the mountains.', 1300, false, true, true, true, true, true, false, false, false, 17, 'path/to/mountain-lodge.jpg'),
+('Skyline Retreat', 3, 2, 2, 2, 'Retreat with panoramic views of the city skyline.', 2100, true, true, true, true, true, true, true, true, true, 18, 'path/to/skyline-retreat.jpg'),
+('Riverside Mansion', 4, 2, 2, 2, 'Grand mansion with a view of the river.', 3000, true, true, true, true, true, true, true, true, true, 19, 'path/to/riverside-mansion.jpg'),
+('Elegant Duplex', 2, 1, 1, 1, 'Elegant duplex with sophisticated design.', 1600, false, true, true
+, true, true, true, false, false, false, 20, 'path/to/elegant-duplex.jpg'),
+('Island Paradise Retreat', 3, 2, 2, 2, 'Exclusive retreat on a tropical island.', 2600, true, true, true, true, true, true, true, true, true, 21, 'path/to/island-paradise-retreat.jpg'),
+('Modern City View', 2, 1, 1, 1, 'Modern room with stunning city views.', 1200, false, true, true, true, true, true, false, false, false, 22, 'path/to/modern-city-view.jpg'),
+('Chic Urban Loft', 4, 2, 2, 2, 'Chic loft in the heart of the urban landscape.', 2800, true, true, true, true, true, true, true, true, true, 23, 'path/to/chic-urban-loft.jpg'),
+('Secluded Cabin', 2, 1, 1, 1, 'Secluded cabin for a quiet and peaceful stay.', 1100, false, true, true, true, true, true, false, false, false, 24, 'path/to/secluded-cabin.jpg'),
+('Beachfront Paradise', 3, 2, 2, 2, 'Paradise by the beach with luxurious amenities.', 2500, true, true, true, true, true, true, true, true, true, 25, 'path/to/beachfront-paradise.jpg');
+
+# BinhLuan
+INSERT INTO binh_luan (ma_phong, ma_nguoi_binh_luan, ngay_binh_luan, noi_dung, sao_binh_luan) VALUES
+(1, 3, '2023-01-20', 'The deluxe suite was amazing, and the view was breathtaking!', 5),
+(2, 1, '2023-02-15', 'Stayed in the standard room, very cozy and comfortable.', 4),
+(3, 4, '2023-03-08', 'The family suite was perfect for our family vacation.', 5),
+(4, 2, '2023-04-05', 'The executive suite exceeded our expectations. Highly recommended!', 5),
+(5, 5, '2023-05-12', 'The cozy cabin provided a charming and intimate atmosphere.', 4),
+(6, 7, '2023-06-18', 'The spacious suite was impressive, especially the modern design.', 5),
+(7, 9, '2023-07-23', 'Enjoyed the rustic retreat for its quaint charm and peaceful surroundings.', 4),
+(8, 11, '2023-08-30', 'The penthouse suite offered breathtaking views and luxurious amenities.', 5),
+(9, 13, '2023-09-12', 'The sky high studio was perfect for our city escape with stunning city views.', 4),
+(10, 15, '2023-10-05', 'The beach bungalow provided a wonderful beachside experience with great amenities.', 5),
+(11, 17, '2023-11-21', 'The mountain lodge was cozy and had a fantastic view of the mountains.', 4),
+(12, 19, '2023-12-15', 'The skyline retreat provided a serene atmosphere with panoramic city views.', 5),
+(13, 21, '2024-01-02', 'The riverside mansion was grand and offered a luxurious stay with river views.', 5),
+(14, 23, '2024-02-08', 'The elegant duplex had a sophisticated design, making our stay truly elegant.', 4),
+(15, 25, '2024-03-14', 'The island paradise retreat was exclusive and perfect for a tropical getaway.', 5);
+
+# DatPhong
+INSERT INTO dat_phong (ma_phong, ngay_den, ngay_di, so_luong_khach, ma_nguoi_dat) VALUES
+(1, '2023-01-25', '2023-01-30', 2, 1),
+(2, '2023-02-18', '2023-02-22', 1, 2),
+(3, '2023-03-12', '2023-03-20', 4, 3),
+(4, '2023-04-08', '2023-04-12', 2, 4),
+(5, '2023-05-15', '2023-05-20', 2, 5),
+(6, '2023-06-22', '2023-06-28', 3, 6),
+(7, '2023-07-25', '2023-07-30', 2, 7),
+(8, '2023-08-18', '2023-08-25', 4, 8),
+(9, '2023-09-10', '2023-09-15', 2, 9),
+(10, '2023-10-05', '2023-10-10', 3, 10),
+(11, '2023-11-12', '2023-11-18', 2, 11),
+(12, '2023-12-20', '2023-12-28', 4, 12),
+(13, '2024-01-15', '2024-01-20', 2, 13),
+(14, '2024-02-08', '2024-02-14', 2, 14),
+(15, '2024-03-18', '2024-03-25', 3, 15),
+(16, '2024-04-10', '2024-04-15', 1, 16),
+(17, '2024-05-22', '2024-05-28', 2, 17),
+(18, '2024-06-15', '2024-06-20', 3, 18),
+(19, '2024-07-08', '2024-07-15', 4, 19),
+(20, '2024-08-18', '2024-08-25', 2, 20),
+(21, '2024-09-10', '2024-09-15', 3, 21),
+(22, '2024-10-05', '2024-10-10', 2, 22),
+(23, '2024-11-12', '2024-11-18', 4, 23),
+(24, '2024-12-20', '2024-12-28', 2, 24),
+(25, '2025-01-15', '2025-01-20', 2, 25),
+(26, '2025-02-08', '2025-02-14', 3, 1),
+(27, '2025-03-18', '2025-03-25', 2, 2),
+(28, '2025-04-10', '2025-04-15', 1, 3),
+(29, '2025-05-22', '2025-05-28', 3, 4),
+(30, '2025-06-15', '2025-06-20', 2, 5);
