@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Res, UseGuards, Logger } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards, Logger, Query, Param, Delete, Put } from '@nestjs/common';
 import { ViTriService } from './vi-tri.service';
-import { ApiBearerAuth, ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateViTriDto } from './dto/create-vi-tri.dto';
+import { UpdateViTriDto } from './dto/update-vi-tri.dto';
 
 @ApiTags('ViTri')
 @Controller('/api/vi-tri')
@@ -37,5 +38,58 @@ export class ViTriController {
 
       throw error;
     }
+  }
+
+  @Get('/phan-trang-tim-kiem')
+  @ApiQuery({
+    name: 'keyword',
+    required: false,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'pageIndex',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+  })
+  phanTrangViTri(
+    @Query('pageIndex') pageIndex: number,
+    @Query('pageSize') pageSize: number,
+    @Query('keyword') keyword: string,
+    @Res() res,
+  ): any {
+    return this.viTriService.phanTrangViTriApi(
+      pageIndex,
+      pageSize,
+      keyword,
+      res,
+    );
+  }
+
+  @Get('/:id')
+  getInfoLocation(@Param('id') idViTri: number, @Res() res): any {
+    return this.viTriService.getInfoLocationBaseOnId(idViTri, res);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/:id')
+  updateViTri(
+    @Body() body: UpdateViTriDto,
+    @Param('id') idViTri: number,
+    @Res() res,
+  ): any {
+    return this.viTriService.updateLocationApi(body, idViTri, res);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:id')
+  deleteViTri(@Param('id') idViTri: number, @Res() res): any {
+    return this.viTriService.deleteLocationApi(idViTri, res);
   }
 }
