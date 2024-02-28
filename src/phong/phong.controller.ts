@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
 import { PhongService } from './phong.service';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreatePhongDto } from './dto/create-phong.dto';
@@ -15,6 +15,8 @@ export class PhongController {
     return this.phongService.fetchPhongThueApi(res);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   createPhongThue(@Body() body: CreatePhongDto, @Res() res): any {
     return this.phongService.createPhongThueApi(body, res);
@@ -60,8 +62,8 @@ export class PhongController {
     return this.phongService.getPhongBaseOnIdApi(idPhong, res);
   }
 
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   updatePhongThue(
     @Body() body: UpdatePhongDto,
@@ -71,10 +73,52 @@ export class PhongController {
     return this.phongService.updatePhongThueApi(body, idPhong, res);
   }
 
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   deletePhongThue(@Param('id') idPhong: number, @Res() res): any {
     return this.phongService.deletePhongThueApi(idPhong, res);
   }
+
+   // Create ava phong` (1 pic)
+  //  @ApiBearerAuth()
+  //  @UseGuards(AuthGuard('jwt'))
+  //  @ApiConsumes('multipart/form-data')
+  //  @ApiBody({ type: UpLoadHinhPhongDto })
+  //  @Post('/upload-hinh-phong')
+  //  @UseInterceptors(FileInterceptor('formFile'))
+  //  async uploadAva(
+  //    @Query('maPhong') maPhong: number,
+  //    @UploadedFile(
+  //      new ParseFilePipe({
+  //        validators: [],
+  //      }),
+  //    )
+  //    file: Express.Multer.File,
+  //    @Res() res,
+  //  ) {
+  //    const key = `${file.originalname}${Date.now()}`;
+  //    return this.phongService.uploadHinhPhongApi(maPhong, file, key, res);
+  //  }
+ 
+  //  // Update ava phong (1 pic)
+  //  @ApiBearerAuth()
+  //  @UseGuards(AuthGuard('jwt'))
+  //  @ApiConsumes('multipart/form-data')
+  //  @ApiBody({ type: UpLoadHinhPhongDto })
+  //  @Put('/upload-hinh-phong')
+  //  @UseInterceptors(FileInterceptor('formFile'))
+  //  async updateAva(
+  //    @Query('maPhong') maPhong: number,
+  //    @UploadedFile(
+  //      new ParseFilePipe({
+  //        validators: [],
+  //      }),
+  //    )
+  //    file: Express.Multer.File,
+  //    @Res() res,
+  //  ) {
+  //    const key = `${file.originalname}${Date.now()}`;
+  //    return this.phongService.uploadHinhPhongApi(maPhong, file, key, res);
+  //  }
 }

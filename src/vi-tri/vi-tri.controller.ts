@@ -1,15 +1,35 @@
-import { Body, Controller, Get, Post, Res, UseGuards, Logger, Query, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Put,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  ParseFilePipe,
+} from '@nestjs/common';
 import { ViTriService } from './vi-tri.service';
-import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { CreateViTriDto } from './dto/create-vi-tri.dto';
 import { UpdateViTriDto } from './dto/update-vi-tri.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpLoadHinhViTriDto } from './dto/hinh-vi-tri.dto';
 
 @ApiTags('ViTri')
 @Controller('/api/vi-tri')
 export class ViTriController {
-  private readonly logger = new Logger(ViTriController.name);
-
   constructor(private readonly viTriService: ViTriService) {}
 
   @Get()
@@ -17,27 +37,11 @@ export class ViTriController {
     return this.viTriService.fetchViTriApi(res);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer <JWT token>',
-  })
-  @ApiBody({ type: CreateViTriDto })
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   createViTri(@Body() body: CreateViTriDto, @Res() res): any {
-
-    try {
-      this.logger.log(`Received request to create position: ${JSON.stringify(body)}`);
-
-      this.logger.log('Authentication successful');
-
-      return this.viTriService.createViTriApi(body, res);
-    } catch (error) {
-      this.logger.error(`Error during authentication: ${error.message}`);
-
-      throw error;
-    }
+    return this.viTriService.createViTriApi(body, res);
   }
 
   @Get('/phan-trang-tim-kiem')
@@ -92,4 +96,46 @@ export class ViTriController {
   deleteViTri(@Param('id') idViTri: number, @Res() res): any {
     return this.viTriService.deleteLocationApi(idViTri, res);
   }
+
+    // Update ava vi_tri
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBody({ type: UpLoadHinhViTriDto })
+  // @Put('/upload-hinh-vi-tri')
+  // @UseInterceptors(FileInterceptor('formFile'))
+  // async uploadAva(
+  //   @Query('maViTri') maViTri: number,
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  //   @Res() res,
+  // ) {
+  //   const key = `${file.originalname}${Date.now()}`;
+  //   return this.viTriService.uploadHinhViTriApi(maViTri, file, key, res);
+  // }
+
+  // // Create ava vi_tri (1 pic)
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBody({ type: UpLoadHinhViTriDto })
+  // @Post(`/create-upload-hinh-vi-tri`)
+  // @UseInterceptors(FileInterceptor('formFile'))
+  // async uploadAvaCreate(
+  //   @Query('maViTri') maViTri: number,
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  //   @Res() res,
+  // ) {
+  //   const key = `${file.originalname}${Date.now()}`;
+  //   return this.viTriService.createUploadHinhVitri(maViTri, file, key, res);
+  // }
 }

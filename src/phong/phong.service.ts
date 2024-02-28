@@ -251,4 +251,52 @@ export class PhongService {
       return res.status(500).send('Lỗi BE!');
     }
   }
+
+  // async uploadHinhPhongApi(
+  //   maPhong,
+  //   file: Express.Multer.File,
+  //   key: string,
+  //   res,
+  // ): Promise<any> {
+  //   const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
+  //   const input: PutObjectCommandInput = {
+  //     Body: file.buffer,
+  //     Bucket: bucket,
+  //     Key: key,
+  //     ContentType: file.mimetype,
+  //     ACL: 'public-read',
+  //   };
+  //   try {
+  //     let checkMaPhong = await this.prisma.phong.findFirst({
+  //       where: {
+  //         id: Number(maPhong),
+  //       },
+  //     });
+  //     if (checkMaPhong) {
+  //       const response: PutObjectCommandOutput = await this.s3.send(
+  //         new PutObjectCommand(input),
+  //       );
+  //       if (response.$metadata.httpStatusCode === 200) {
+  //         const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
+  //         let data = await this.prisma.phong.findFirst({
+  //           where: {
+  //             id: Number(maPhong),
+  //           },
+  //         });
+  //         let newHinh = { ...data, hinh_anh: url };
+  //         let upload = await this.prisma.phong.update({
+  //           where: {
+  //             id: Number(maPhong),
+  //           },
+  //           data: newHinh,
+  //         });
+  //         return res.status(201).send(upload);
+  //       }
+  //     } else {
+  //       return res.status(404).send('Mã phòng không tồn tại');
+  //     }
+  //   } catch {
+  //     return res.status(500).send('Không tìm thấy tài nguyên!');
+  //   }
+  // }
 }
