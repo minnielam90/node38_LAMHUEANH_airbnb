@@ -97,45 +97,45 @@ export class ViTriController {
     return this.viTriService.deleteLocationApi(idViTri, res);
   }
 
-    // Update ava vi_tri
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiConsumes('multipart/form-data')
-  // @ApiBody({ type: UpLoadHinhViTriDto })
-  // @Put('/upload-hinh-vi-tri')
-  // @UseInterceptors(FileInterceptor('formFile'))
-  // async uploadAva(
-  //   @Query('maViTri') maViTri: number,
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [],
-  //     }),
-  //   )
-  //   file: Express.Multer.File,
-  //   @Res() res,
-  // ) {
-  //   const key = `${file.originalname}${Date.now()}`;
-  //   return this.viTriService.uploadHinhViTriApi(maViTri, file, key, res);
-  // }
+  // Update ava vi_tri
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpLoadHinhViTriDto })
+  @Put('/upload-hinh-vi-tri')
+  @UseInterceptors(FileInterceptor('formFile'))
+  async uploadAva(
+    @Query('maViTri') maViTri: number,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [],
+      }),
+    )
+    file: Express.Multer.File,
+    @Res() res,
+  ) {
+    const key = `${file.originalname}${Date.now()}`;
+    return this.viTriService.uploadHinhViTriApi(maViTri, file, key, res);
+  }
 
-  // // Create ava vi_tri (1 pic)
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiConsumes('multipart/form-data')
-  // @ApiBody({ type: UpLoadHinhViTriDto })
-  // @Post(`/create-upload-hinh-vi-tri`)
-  // @UseInterceptors(FileInterceptor('formFile'))
-  // async uploadAvaCreate(
-  //   @Query('maViTri') maViTri: number,
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [],
-  //     }),
-  //   )
-  //   file: Express.Multer.File,
-  //   @Res() res,
-  // ) {
-  //   const key = `${file.originalname}${Date.now()}`;
-  //   return this.viTriService.createUploadHinhVitri(maViTri, file, key, res);
-  // }
+  // Create ava vi_tri (1 pic)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpLoadHinhViTriDto })
+  @Post(`/create-upload-hinh-vi-tri`)
+  @UseInterceptors(FileInterceptor('formFile'))
+  async uploadAvaCreate(
+    @Query('maViTri') maViTri: number,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [],
+      }),
+    )
+    file: Express.Multer.File,
+    @Res() res,
+  ) {
+    const key = `${file.originalname}${Date.now()}`;
+    return this.viTriService.createUploadHinhVitri(maViTri, file, key, res);
+  }
 }

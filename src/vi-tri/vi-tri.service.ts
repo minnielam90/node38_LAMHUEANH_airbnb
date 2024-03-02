@@ -3,23 +3,23 @@ import { CreateViTriDto } from './dto/create-vi-tri.dto';
 import { UpdateViTriDto } from './dto/update-vi-tri.dto';
 import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-// import {
-//   PutObjectCommand,
-//   S3Client,
-//   PutObjectCommandInput,
-//   PutObjectCommandOutput,
-// } from '@aws-sdk/client-s3';
+import {
+  PutObjectCommand,
+  S3Client,
+  PutObjectCommandInput,
+  PutObjectCommandOutput,
+} from '@aws-sdk/client-s3';
 
 @Injectable()
 export class ViTriService {
-  // private region: string;
-  // private s3: S3Client;
+  private region: string;
+  private s3: S3Client;
   constructor(private readonly configService: ConfigService) {
-    // this.region =
-    //   this.configService.get<string>('AWS_S3_REGION') || 'ap-southeast-1';
-    // this.s3 = new S3Client({
-    //   region: this.region,
-    // });
+    this.region =
+      this.configService.get<string>('AWS_S3_REGION') || 'ap-southeast-1';
+    this.s3 = new S3Client({
+      region: this.region,
+    });
   }
   prisma = new PrismaClient();
 
@@ -148,99 +148,114 @@ export class ViTriService {
     }
   }
 
-  // async uploadHinhViTriApi(
-  //   maViTri,
-  //   file: Express.Multer.File,
-  //   key: string,
-  //   res,
-  // ): Promise<any> {
-  //   const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
-  //   const input: PutObjectCommandInput = {
-  //     Body: file.buffer,
-  //     Bucket: bucket,
-  //     Key: key,
-  //     ContentType: file.mimetype,
-  //     ACL: 'public-read',
-  //   };
-  //   try {
-  //     let checkMaViTri = await this.prisma.vi_tri.findFirst({
-  //       where: {
-  //         id: Number(maViTri),
-  //       },
-  //     });
-  //     if (checkMaViTri) {
-  //       const response: PutObjectCommandOutput = await this.s3.send(
-  //         new PutObjectCommand(input),
-  //       );
-  //       if (response.$metadata.httpStatusCode === 200) {
-  //         const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
-  //         let data = await this.prisma.vi_tri.findFirst({
-  //           where: {
-  //             id: Number(maViTri),
-  //           },
-  //         });
-  //         let newHinh = { ...data, hinh_anh: url };
-  //         let upload = await this.prisma.vi_tri.update({
-  //           where: {
-  //             id: Number(maViTri),
-  //           },
-  //           data: newHinh,
-  //         });
-  //         return res.status(201).send(upload);
-  //       }
-  //     } else {
-  //       return res.status(404).send('Mã vị trí không tồn tại');
-  //     }
-  //   } catch {
-  //     return res.status(500).send('Không tìm thấy tài nguyên!');
-  //   }
-  // }
+  async uploadHinhViTriApi(
+    maViTri,
+    file: Express.Multer.File,
+    key: string,
+    res,
+  ): Promise<any> {
+    const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
+    const input: PutObjectCommandInput = {
+      Body: file.buffer,
+      Bucket: bucket,
+      Key: key,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+    try {
+      // Log the values for debugging
+    console.log('maViTri:', maViTri);
+    console.log('S3 Upload Input:', input);
 
-  // async createUploadHinhVitri(
-  //   maViTri,
-  //   file: Express.Multer.File,
-  //   key: string,
-  //   res,
-  // ): Promise<any> {
-  //   const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
-  //   const input: PutObjectCommandInput = {
-  //     Body: file.buffer,
-  //     Bucket: bucket,
-  //     Key: key,
-  //     ContentType: file.mimetype,
-  //     ACL: 'public-read',
-  //   };
-  //   try {
-  //     let checkMaViTri = await this.prisma.vi_tri.findFirst({
-  //       where: {
-  //         id: Number(maViTri),
-  //       },
-  //     });
-  //     if (checkMaViTri) {
-  //       const response: PutObjectCommandOutput = await this.s3.send(
-  //         new PutObjectCommand(input),
-  //       );
-  //       if (response.$metadata.httpStatusCode === 200) {
-  //         const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
-  //         let data = await this.prisma.vi_tri.findFirst({
-  //           where: {
-  //             id: Number(maViTri),
-  //           },
-  //         });
-  //         let newHinh = { ...data, hinh_anh: url };
-  //         let upload = await this.prisma.vi_tri.update({
-  //           where: {
-  //             id: Number(maViTri),
-  //           },
-  //           data: newHinh,
-  //         });
-  //         return res.status(201).send(upload);
-  //       }
-  //     } else {
-  //       return res.status(404).send('Mã vị trí không tồn tại');
-  //     }
-  //   } catch {
-  //     return res.status(500).send('Không tìm thấy tài nguyên!');
-  //   }
-  // }
+      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+        where: {
+          id: Number(maViTri),
+        },
+      });
+      if (checkMaViTri) {
+        const response: PutObjectCommandOutput = await this.s3.send(
+          new PutObjectCommand(input),
+        );
+
+        console.log('S3 Upload Response:', response);
+
+        if (response.$metadata.httpStatusCode === 200) {
+          const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
+          let data = await this.prisma.vi_tri.findFirst({
+            where: {
+              id: Number(maViTri),
+            },
+          });
+
+          console.log('Data before update:', data);
+
+          let newHinh = { ...data, hinh_anh: url };
+          let upload = await this.prisma.vi_tri.update({
+            where: {
+              id: Number(maViTri),
+            },
+            data: newHinh,
+          });
+
+          console.log('Upload result:', upload);
+
+          return res.status(201).send(upload);
+        }
+      } else {
+        return res.status(404).send('Mã vị trí không tồn tại');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      
+      return res.status(500).send('Không tìm thấy tài nguyên!');
+    }
+  }
+
+  async createUploadHinhVitri(
+    maViTri,
+    file: Express.Multer.File,
+    key: string,
+    res,
+  ): Promise<any> {
+    const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
+    const input: PutObjectCommandInput = {
+      Body: file.buffer,
+      Bucket: bucket,
+      Key: key,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+    try {
+      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+        where: {
+          id: Number(maViTri),
+        },
+      });
+      if (checkMaViTri) {
+        const response: PutObjectCommandOutput = await this.s3.send(
+          new PutObjectCommand(input),
+        );
+        if (response.$metadata.httpStatusCode === 200) {
+          const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
+          let data = await this.prisma.vi_tri.findFirst({
+            where: {
+              id: Number(maViTri),
+            },
+          });
+          let newHinh = { ...data, hinh_anh: url };
+          let upload = await this.prisma.vi_tri.update({
+            where: {
+              id: Number(maViTri),
+            },
+            data: newHinh,
+          });
+          return res.status(201).send(upload);
+        }
+      } else {
+        return res.status(404).send('Mã vị trí không tồn tại');
+      }
+    } catch {
+      return res.status(500).send('Không tìm thấy tài nguyên!');
+    }
+  }
 }

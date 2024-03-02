@@ -1,5 +1,5 @@
 // nguoi-dung.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client'
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import * as bcrypt from 'bcrypt';
@@ -8,7 +8,6 @@ import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 @Injectable()
 export class NguoiDungService {
     prisma = new PrismaClient();
-    // private readonly logger = new Logger(NguoiDungService.name);
 
     async fetchNguoiDungApi(res): Promise<any> {
       try {
