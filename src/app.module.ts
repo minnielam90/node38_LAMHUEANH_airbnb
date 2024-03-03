@@ -8,13 +8,14 @@ import { PhongModule } from './phong/phong.module';
 import { ViTriModule } from './vi-tri/vi-tri.module';
 import { BinhLuanModule } from './binh-luan/binh-luan.module';
 import { ConfigModule } from '@nestjs/config';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
-    AuthModule, NguoiDungModule, DatPhongModule, PhongModule, ViTriModule, BinhLuanModule],
+    AuthModule, NguoiDungModule, DatPhongModule, PhongModule, ViTriModule, BinhLuanModule, FileModule],
   controllers: [AppController],
   providers: [AppService],
 })

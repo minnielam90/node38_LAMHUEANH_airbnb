@@ -1,9 +1,10 @@
 // nguoi-dung.controller.ts
-import { Controller, Get, Res, Post, Body, Delete, Param, Query, Put } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Delete, Param, Query, Put, UseInterceptors, Req, UploadedFile } from '@nestjs/common';
 import { NguoiDungService } from './nguoi-dung.service';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('NguoiDung')
 
@@ -80,5 +81,23 @@ export class NguoiDungController {
     @Res() res,
   ): any {
     return this.nguoiDungService.searchNguoiDungApi(tenNguoiDung, res);
+  }
+
+  @Post('/avatar')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async addAvatar(@UploadedFile() file: Express.Multer.File){
+    return this.nguoiDungService.uploadFile(file.buffer, file.originalname);
   }
 }

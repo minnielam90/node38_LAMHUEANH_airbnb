@@ -4,9 +4,13 @@ import { PrismaClient } from '@prisma/client'
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class NguoiDungService {
+  constructor(
+    private readonly filesService: FileService
+  ){}
     prisma = new PrismaClient();
 
     async fetchNguoiDungApi(res): Promise<any> {
@@ -180,5 +184,10 @@ export class NguoiDungService {
       } catch {
         return res.status(500).send('Lỗi BE!');
       }
+    }
+
+    async uploadFile(imageBuffer: Buffer, filename: string) {
+      const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
+      return avatar;
     }
 }
