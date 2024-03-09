@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService) {
@@ -17,8 +16,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   prisma = new PrismaClient();
 
   async validate(tokenDecode: any) {
-    console.log('Token decoded:', tokenDecode); 
-    let { id, email, full_name } = tokenDecode.data;
+    console.log('Token decoded:', tokenDecode);
+    const { id, email, full_name } = tokenDecode.data;
+
     let checkEmail = await this.prisma.nguoi_dung.findFirst({
       where: {
         email,
@@ -33,7 +33,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // return tokenDecode;
   }
 }
-
 
 // import { Injectable, Req, UnauthorizedException } from "@nestjs/common";
 // import { ConfigService } from "@nestjs/config";

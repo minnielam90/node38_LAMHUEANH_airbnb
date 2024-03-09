@@ -1,12 +1,32 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { PhongService } from './phong.service';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreatePhongDto } from './dto/create-phong.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdatePhongDto } from './dto/update-phong.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Phong')
-@Controller('phong')
+@Controller('/api/phong')
 export class PhongController {
   constructor(private readonly phongService: PhongService) {}
 
@@ -80,45 +100,32 @@ export class PhongController {
     return this.phongService.deletePhongThueApi(idPhong, res);
   }
 
-   // Create ava phong` (1 pic)
-  //  @ApiBearerAuth()
-  //  @UseGuards(AuthGuard('jwt'))
-  //  @ApiConsumes('multipart/form-data')
-  //  @ApiBody({ type: UpLoadHinhPhongDto })
-  //  @Post('/upload-hinh-phong')
-  //  @UseInterceptors(FileInterceptor('formFile'))
-  //  async uploadAva(
-  //    @Query('maPhong') maPhong: number,
-  //    @UploadedFile(
-  //      new ParseFilePipe({
-  //        validators: [],
-  //      }),
-  //    )
-  //    file: Express.Multer.File,
-  //    @Res() res,
-  //  ) {
-  //    const key = `${file.originalname}${Date.now()}`;
-  //    return this.phongService.uploadHinhPhongApi(maPhong, file, key, res);
-  //  }
- 
-  //  // Update ava phong (1 pic)
-  //  @ApiBearerAuth()
-  //  @UseGuards(AuthGuard('jwt'))
-  //  @ApiConsumes('multipart/form-data')
-  //  @ApiBody({ type: UpLoadHinhPhongDto })
-  //  @Put('/upload-hinh-phong')
-  //  @UseInterceptors(FileInterceptor('formFile'))
-  //  async updateAva(
-  //    @Query('maPhong') maPhong: number,
-  //    @UploadedFile(
-  //      new ParseFilePipe({
-  //        validators: [],
-  //      }),
-  //    )
-  //    file: Express.Multer.File,
-  //    @Res() res,
-  //  ) {
-  //    const key = `${file.originalname}${Date.now()}`;
-  //    return this.phongService.uploadHinhPhongApi(maPhong, file, key, res);
-  //  }
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiConsumes('multipart/form-data')
+  @Post('/upload-hinh-phong')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        maPhong: {
+          type: 'integer',
+        },
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+      required: ['maPhong', 'file'],
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadCreatePic(
+    @Body() body: { maPhong: number },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const { maPhong } = body;
+    const key = `${file.originalname}${Date.now()}`;
+    return this.phongService.createUploadHinhPhong(maPhong, file.buffer, key);
+  }
 }

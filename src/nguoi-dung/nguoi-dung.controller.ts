@@ -1,19 +1,39 @@
-// nguoi-dung.controller.ts
-import { Controller, Get, Res, Post, Body, Delete, Param, Query, Put, UseInterceptors, Req, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Query,
+  Put,
+  UseInterceptors,
+  UploadedFile,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { NguoiDungService } from './nguoi-dung.service';
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('NguoiDung')
-
 @Controller('/api/nguoi-dung')
 export class NguoiDungController {
   constructor(private readonly nguoiDungService: NguoiDungService) {}
-  
+
   @Get()
-  @ApiResponse({ 
+  @ApiResponse({
     status: 200,
     description: 'Success',
   })
@@ -83,21 +103,32 @@ export class NguoiDungController {
     return this.nguoiDungService.searchNguoiDungApi(tenNguoiDung, res);
   }
 
-  @Post('/avatar')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/upload-avatar')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
+        maNguoiDung: {
+          type: 'integer',
+        },
         file: {
           type: 'string',
-          format: 'binary'
-        }
-      }
-    }
+          format: 'binary',
+        },
+      },
+      required: ['maNguoiDung', 'file'],
+    },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async addAvatar(@UploadedFile() file: Express.Multer.File){
-    return this.nguoiDungService.uploadFile(file.buffer, file.originalname);
+  async addAvatar(
+    @Body() body: { maNguoiDung: number },
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const { maNguoiDung } = body;
+    const key = `${file.originalname}${Date.now()}`;
+    return this.nguoiDungService.uploadFile(maNguoiDung, file.buffer, key);
   }
 }

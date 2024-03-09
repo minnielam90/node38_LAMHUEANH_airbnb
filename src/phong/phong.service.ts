@@ -2,9 +2,12 @@ import { Get, Injectable, Param } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CreatePhongDto } from './dto/create-phong.dto';
 import { UpdatePhongDto } from './dto/update-phong.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class PhongService {
+  constructor(private readonly fileService: FileService) {}
+
   prisma = new PrismaClient();
 
   async fetchPhongThueApi(res): Promise<any> {
@@ -252,51 +255,41 @@ export class PhongService {
     }
   }
 
-  // async uploadHinhPhongApi(
-  //   maPhong,
-  //   file: Express.Multer.File,
-  //   key: string,
-  //   res,
-  // ): Promise<any> {
-  //   const bucket = this.configService.get<string>('AWS_BUCKET_NAME');
-  //   const input: PutObjectCommandInput = {
-  //     Body: file.buffer,
-  //     Bucket: bucket,
-  //     Key: key,
-  //     ContentType: file.mimetype,
-  //     ACL: 'public-read',
-  //   };
-  //   try {
-  //     let checkMaPhong = await this.prisma.phong.findFirst({
-  //       where: {
-  //         id: Number(maPhong),
-  //       },
-  //     });
-  //     if (checkMaPhong) {
-  //       const response: PutObjectCommandOutput = await this.s3.send(
-  //         new PutObjectCommand(input),
-  //       );
-  //       if (response.$metadata.httpStatusCode === 200) {
-  //         const url = `http://${bucket}.s3.${this.region}.amazonaws.com/${key}`;
-  //         let data = await this.prisma.phong.findFirst({
-  //           where: {
-  //             id: Number(maPhong),
-  //           },
-  //         });
-  //         let newHinh = { ...data, hinh_anh: url };
-  //         let upload = await this.prisma.phong.update({
-  //           where: {
-  //             id: Number(maPhong),
-  //           },
-  //           data: newHinh,
-  //         });
-  //         return res.status(201).send(upload);
-  //       }
-  //     } else {
-  //       return res.status(404).send('Mã phòng không tồn tại');
-  //     }
-  //   } catch {
-  //     return res.status(500).send('Không tìm thấy tài nguyên!');
-  //   }
-  // }
+  async createUploadHinhPhong(
+    maPhong,
+    imageBuffer: Buffer,
+    filename: string,
+  ): Promise<any> {
+    try {
+      const checkMaPhong = await this.prisma.phong.findFirst({
+        where: {
+          id: Number(maPhong),
+        },
+      });
+
+      if (checkMaPhong) {
+        const photo = await this.fileService.uploadPublicFile(
+          imageBuffer,
+          filename,
+        );
+
+        const imageUrl = photo.Location;
+
+        const updatedPhong = await this.prisma.phong.update({
+          where: {
+            id: Number(maPhong),
+          },
+          data: {
+            hinh_anh: imageUrl,
+          },
+        });
+
+        return updatedPhong;
+      } else {
+        throw new Error('Mã phòng không tồn tại');
+      }
+    } catch {
+      throw new Error('Không tìm thấy tài nguyên!');
+    }
+  }
 }
