@@ -6,8 +6,7 @@ import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class ViTriService {
-  constructor(private readonly fileService: FileService) {
-  }
+  constructor(private readonly fileService: FileService) {}
   prisma = new PrismaClient();
 
   async fetchViTriApi(res): Promise<any> {
@@ -135,34 +134,41 @@ export class ViTriService {
     }
   }
 
-  async createUploadHinhVitri(maViTri, imageBuffer: Buffer, filename: string): Promise<any> {
+  async createUploadHinhVitri(
+    maViTri,
+    imageBuffer: Buffer,
+    filename: string,
+  ): Promise<any> {
     try {
-        const checkMaViTri = await this.prisma.vi_tri.findFirst({
-            where: {
-                id: Number(maViTri),
-            },
+      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+        where: {
+          id: Number(maViTri),
+        },
+      });
+
+      if (checkMaViTri) {
+        let photo = await this.fileService.uploadPublicFile(
+          imageBuffer,
+          filename,
+        );
+
+        let imageUrl = photo.Location;
+
+        let updatedViTri = await this.prisma.vi_tri.update({
+          where: {
+            id: Number(maViTri),
+          },
+          data: {
+            hinh_anh: imageUrl,
+          },
         });
 
-        if (checkMaViTri) {
-            const photo = await this.fileService.uploadPublicFile(imageBuffer, filename);
-
-            const imageUrl = photo.Location;
-
-            const updatedViTri = await this.prisma.vi_tri.update({
-                where: {
-                    id: Number(maViTri),
-                },
-                data: {
-                    hinh_anh: imageUrl,
-                },
-            });
-
-            return updatedViTri;
-        } else {
-            throw new Error('Mã vị trí không tồn tại');
-        }
+        return updatedViTri;
+      } else {
+        throw new Error('Mã vị trí không tồn tại');
+      }
     } catch {
-        throw new Error('Không tìm thấy tài nguyên!');
+      throw new Error('Không tìm thấy tài nguyên!');
     }
   }
 }

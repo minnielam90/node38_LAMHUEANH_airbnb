@@ -261,21 +261,21 @@ export class PhongService {
     filename: string,
   ): Promise<any> {
     try {
-      const checkMaPhong = await this.prisma.phong.findFirst({
+      let checkMaPhong = await this.prisma.phong.findFirst({
         where: {
           id: Number(maPhong),
         },
       });
 
       if (checkMaPhong) {
-        const photo = await this.fileService.uploadPublicFile(
+        let photo = await this.fileService.uploadPublicFile(
           imageBuffer,
           filename,
         );
 
-        const imageUrl = photo.Location;
+        let imageUrl = photo.Location;
 
-        const updatedPhong = await this.prisma.phong.update({
+        let updatedPhong = await this.prisma.phong.update({
           where: {
             id: Number(maPhong),
           },

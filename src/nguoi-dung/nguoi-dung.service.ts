@@ -182,46 +182,36 @@ export class NguoiDungService {
     }
   }
 
-  // async uploadFile(imageBuffer: Buffer, filename: string) {
-  //   const avatar = await this.filesService.uploadPublicFile(
-  //     imageBuffer,
-  //     filename,
-  //   );
-  //   return avatar;
-  // }
-
-  // nguoi-dung.service.ts
-
   async uploadFile(
     maNguoiDung,
     imageBuffer: Buffer,
     filename: string,
   ): Promise<any> {
     try {
-      const checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
+      let checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(maNguoiDung),
         },
       });
 
       if (checkMaNguoiDung) {
-        const photo = await this.filesService.uploadPublicFile(
+        let photo = await this.filesService.uploadPublicFile(
           imageBuffer,
           filename,
         );
 
-        const imageUrl = photo.Location;
+        let imageUrl = photo.Location;
 
-        const updatedViTri = await this.prisma.vi_tri.update({
+        let updatedNguoiDung = await this.prisma.nguoi_dung.update({
           where: {
             id: Number(maNguoiDung),
           },
           data: {
-            hinh_anh: imageUrl,
+            avatar: imageUrl,
           },
         });
 
-        return updatedViTri;
+        return updatedNguoiDung;
       } else {
         throw new Error('Mã người dùng không tồn tại');
       }
