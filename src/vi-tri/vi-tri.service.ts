@@ -11,7 +11,7 @@ export class ViTriService {
 
   async fetchViTriApi(res): Promise<any> {
     try {
-      let data = await this.prisma.vi_tri.findMany();
+      const data = await this.prisma.vi_tri.findMany();
       return res.status(200).send(data);
     } catch {
       return res.status(500).send('Lỗi BE!');
@@ -20,9 +20,9 @@ export class ViTriService {
 
   async createViTriApi(body: CreateViTriDto, res): Promise<any> {
     try {
-      let { ten_vi_tri, tinh_thanh, quoc_gia } = body;
-      let data = { ten_vi_tri, tinh_thanh, quoc_gia };
-      let newData = await this.prisma.vi_tri.create({
+      const { ten_vi_tri, tinh_thanh, quoc_gia } = body;
+      const data = { ten_vi_tri, tinh_thanh, quoc_gia };
+      const newData = await this.prisma.vi_tri.create({
         data: data,
       });
       return res.status(201).send(newData);
@@ -33,13 +33,13 @@ export class ViTriService {
 
   async getInfoLocationBaseOnId(idViTri, res): Promise<any> {
     try {
-      let checkIdVitri = await this.prisma.vi_tri.findFirst({
+      const checkIdVitri = await this.prisma.vi_tri.findFirst({
         where: {
           id: Number(idViTri),
         },
       });
       if (checkIdVitri) {
-        let data = await this.prisma.vi_tri.findFirst({
+        const data = await this.prisma.vi_tri.findFirst({
           where: {
             id: Number(idViTri),
           },
@@ -55,15 +55,15 @@ export class ViTriService {
 
   async updateLocationApi(body: UpdateViTriDto, idViTri, res): Promise<any> {
     try {
-      let { ten_vi_tri, tinh_thanh, quoc_gia } = body;
-      let checkIdViTri = await this.prisma.vi_tri.findFirst({
+      const { ten_vi_tri, tinh_thanh, quoc_gia } = body;
+      const checkIdViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: Number(idViTri),
         },
       });
       if (checkIdViTri) {
-        let newUpdate = { ten_vi_tri, tinh_thanh, quoc_gia };
-        let updateData = await this.prisma.vi_tri.update({
+        const newUpdate = { ten_vi_tri, tinh_thanh, quoc_gia };
+        const updateData = await this.prisma.vi_tri.update({
           where: {
             id: Number(idViTri),
           },
@@ -80,18 +80,18 @@ export class ViTriService {
 
   async deleteLocationApi(idViTri, res): Promise<any> {
     try {
-      let checkIdViTri = await this.prisma.vi_tri.findFirst({
+      const checkIdViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: Number(idViTri),
         },
       });
-      let checkViTriPhong = await this.prisma.phong.findFirst({
+      const checkViTriPhong = await this.prisma.phong.findFirst({
         where: {
           ma_vi_tri: Number(idViTri),
         },
       });
       if (checkIdViTri && !checkViTriPhong) {
-        let deleteData = await this.prisma.vi_tri.delete({
+        const deleteData = await this.prisma.vi_tri.delete({
           where: {
             id: Number(idViTri),
           },
@@ -111,11 +111,11 @@ export class ViTriService {
 
   async phanTrangViTriApi(pageIndex, pageSize, keyword, res): Promise<any> {
     try {
-      let data = await this.prisma.vi_tri.findMany({
+      const data = await this.prisma.vi_tri.findMany({
         skip: (Number(pageIndex) - 1) * Number(pageSize),
         take: Number(pageSize),
       });
-      let findKeyWord = await this.prisma.vi_tri.findMany({
+      const findKeyWord = await this.prisma.vi_tri.findMany({
         where: {
           ten_vi_tri: {
             contains: keyword,
@@ -140,21 +140,21 @@ export class ViTriService {
     filename: string,
   ): Promise<any> {
     try {
-      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+      const checkMaViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: Number(maViTri),
         },
       });
 
       if (checkMaViTri) {
-        let photo = await this.fileService.uploadPublicFile(
+        const photo = await this.fileService.uploadPublicFile(
           imageBuffer,
           filename,
         );
 
-        let imageUrl = photo.Location;
+        const imageUrl = photo.Location;
 
-        let updatedViTri = await this.prisma.vi_tri.update({
+        const updatedViTri = await this.prisma.vi_tri.update({
           where: {
             id: Number(maViTri),
           },
