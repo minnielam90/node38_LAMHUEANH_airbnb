@@ -8,7 +8,7 @@ export class DatPhongService {
   prisma = new PrismaClient();
   async fetchDatPhongApi(res): Promise<any> {
     try {
-      let data = await this.prisma.dat_phong.findMany({});
+      const data = await this.prisma.dat_phong.findMany({});
       return res.status(200).send(data);
     } catch {
       return res.status(500).send('Lỗi BE!');
@@ -17,33 +17,34 @@ export class DatPhongService {
 
   async createDatPhongApi(body: CreateDatPhongDto, res): Promise<any> {
     try {
-      let { ma_phong, ngay_den, ngay_di, so_luong_khach, ma_nguoi_dat } = body;
-      let checkMaPhong = await this.prisma.phong.findFirst({
+      const { ma_phong, ngay_den, ngay_di, so_luong_khach, ma_nguoi_dat } =
+        body;
+      const checkMaPhong = await this.prisma.phong.findFirst({
         where: {
           id: ma_phong,
         },
       });
-      let checkMaNguoiDat = await this.prisma.nguoi_dung.findFirst({
+      const checkMaNguoiDat = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: ma_nguoi_dat,
         },
       });
       if (checkMaPhong && checkMaNguoiDat) {
-        let newDatPhong = {
+        const newDatPhong = {
           ma_phong,
           ngay_den,
           ngay_di,
           so_luong_khach,
           ma_nguoi_dat,
         };
-        let datPhong = await this.prisma.dat_phong.create({
+        const datPhong = await this.prisma.dat_phong.create({
           data: newDatPhong,
         });
         return res.status(201).send({
-        statusCode: 201,
-        message: 'Thêm mới thành công!',
-        content: datPhong,
-      });
+          statusCode: 201,
+          message: 'Thêm mới thành công!',
+          content: datPhong,
+        });
       } else if (!checkMaPhong) {
         return res.status(404).send('Mã phòng không tồn tại!');
       } else if (!checkMaNguoiDat) {
@@ -56,13 +57,13 @@ export class DatPhongService {
 
   async getInfoDatPhongTheoIdApi(idDatPhong, res): Promise<any> {
     try {
-      let checkMaDatPhong = await this.prisma.dat_phong.findFirst({
+      const checkMaDatPhong = await this.prisma.dat_phong.findFirst({
         where: {
           id: Number(idDatPhong),
         },
       });
       if (checkMaDatPhong) {
-        let findInfoDatPhongBaseOnId = await this.prisma.dat_phong.findFirst({
+        const findInfoDatPhongBaseOnId = await this.prisma.dat_phong.findFirst({
           where: {
             id: Number(idDatPhong),
           },
@@ -76,33 +77,38 @@ export class DatPhongService {
     }
   }
 
-  async updateDatPhongApi(body, idDatPhong, res): Promise<any> {
+  async updateDatPhongApi(
+    body: UpdateDatPhongDto,
+    idDatPhong,
+    res,
+  ): Promise<any> {
     try {
-      let { ma_phong, ngay_den, ngay_di, so_luong_khach, ma_nguoi_dat } = body;
-      let checkMaPhong = await this.prisma.phong.findFirst({
+      const { ma_phong, ngay_den, ngay_di, so_luong_khach, ma_nguoi_dat } =
+        body;
+      const checkMaPhong = await this.prisma.phong.findFirst({
         where: {
           id: ma_phong,
         },
       });
-      let checkMaNguoiDat = await this.prisma.nguoi_dung.findFirst({
+      const checkMaNguoiDat = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: ma_nguoi_dat,
         },
       });
-      let checkMaDatPhong = await this.prisma.dat_phong.findFirst({
+      const checkMaDatPhong = await this.prisma.dat_phong.findFirst({
         where: {
           id: Number(idDatPhong),
         },
       });
       if (checkMaDatPhong && checkMaNguoiDat && checkMaPhong) {
-        let updateData = {
+        const updateData = {
           ma_phong,
           ngay_den,
           ngay_di,
           so_luong_khach,
           ma_nguoi_dat,
         };
-        let update = this.prisma.dat_phong.update({
+        const update = this.prisma.dat_phong.update({
           where: {
             id: Number(idDatPhong),
           },
@@ -123,13 +129,13 @@ export class DatPhongService {
 
   async deleteDatPhongApi(idDatPhong, res): Promise<any> {
     try {
-      let checkMaDatPhong = await this.prisma.dat_phong.findFirst({
+      const checkMaDatPhong = await this.prisma.dat_phong.findFirst({
         where: {
           id: Number(idDatPhong),
         },
       });
       if (checkMaDatPhong) {
-        let deleteDatPhong = await this.prisma.dat_phong.delete({
+        const deleteDatPhong = await this.prisma.dat_phong.delete({
           where: {
             id: Number(idDatPhong),
           },
@@ -145,13 +151,13 @@ export class DatPhongService {
 
   async getInfoDatPhongBaseOnNguoiDung(maNguoiDung, res): Promise<any> {
     try {
-      let checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
+      const checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(maNguoiDung),
         },
       });
       if (checkMaNguoiDung) {
-        let getInfo = await this.prisma.dat_phong.findMany({
+        const getInfo = await this.prisma.dat_phong.findMany({
           where: {
             ma_nguoi_dat: Number(maNguoiDung),
           },

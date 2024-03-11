@@ -1,4 +1,4 @@
-import { Get, Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CreatePhongDto } from './dto/create-phong.dto';
 import { UpdatePhongDto } from './dto/update-phong.dto';
@@ -12,7 +12,7 @@ export class PhongService {
 
   async fetchPhongThueApi(res): Promise<any> {
     try {
-      let data = await this.prisma.phong.findMany();
+      const data = await this.prisma.phong.findMany();
       return res.status(200).send(data);
     } catch {
       return res.status(500).send('Lỗi BE!');
@@ -21,7 +21,7 @@ export class PhongService {
 
   async createPhongThueApi(body: CreatePhongDto, res): Promise<any> {
     try {
-      let {
+      const {
         ten_phong,
         khach,
         phong_ngu,
@@ -42,7 +42,7 @@ export class PhongService {
         hinh_anh,
       } = body;
 
-      let newPhongThue = {
+      const newPhongThue = {
         ten_phong,
         khach,
         phong_ngu,
@@ -63,13 +63,13 @@ export class PhongService {
         hinh_anh,
       };
 
-      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+      const checkMaViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: ma_vi_tri,
         },
       });
       if (checkMaViTri) {
-        let createPhong = await this.prisma.phong.create({
+        const createPhong = await this.prisma.phong.create({
           data: newPhongThue,
         });
 
@@ -84,14 +84,14 @@ export class PhongService {
 
   async getPhongBaseOneLocationApi(maViTri, res): Promise<any> {
     try {
-      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+      const checkMaViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: Number(maViTri),
         },
       });
 
       if (checkMaViTri) {
-        let data = await this.prisma.phong.findMany({
+        const data = await this.prisma.phong.findMany({
           where: {
             ma_vi_tri: Number(maViTri),
           },
@@ -111,11 +111,11 @@ export class PhongService {
 
   async phanTrangPhongApi(pageIndex, pageSize, keyword, res): Promise<any> {
     try {
-      let data = await this.prisma.phong.findMany({
+      const data = await this.prisma.phong.findMany({
         skip: (Number(pageIndex) - 1) * Number(pageSize),
         take: Number(pageSize),
       });
-      let findKeyWord = await this.prisma.phong.findMany({
+      const findKeyWord = await this.prisma.phong.findMany({
         where: {
           ten_phong: {
             contains: keyword,
@@ -136,13 +136,13 @@ export class PhongService {
 
   async getPhongBaseOnIdApi(idPhong, res): Promise<any> {
     try {
-      let checkIdPhong = await this.prisma.phong.findFirst({
+      const checkIdPhong = await this.prisma.phong.findFirst({
         where: {
           id: Number(idPhong),
         },
       });
       if (checkIdPhong) {
-        let data = await this.prisma.phong.findFirst({
+        const data = await this.prisma.phong.findFirst({
           where: {
             id: Number(idPhong),
           },
@@ -158,7 +158,7 @@ export class PhongService {
 
   async updatePhongThueApi(body: UpdatePhongDto, idPhong, res): Promise<any> {
     try {
-      let {
+      const {
         ten_phong,
         khach,
         phong_ngu,
@@ -177,18 +177,18 @@ export class PhongService {
         ban_ui,
         ma_vi_tri,
       } = body;
-      let checkIdPhong = await this.prisma.phong.findFirst({
+      const checkIdPhong = await this.prisma.phong.findFirst({
         where: {
           id: Number(idPhong),
         },
       });
-      let checkMaViTri = await this.prisma.vi_tri.findFirst({
+      const checkMaViTri = await this.prisma.vi_tri.findFirst({
         where: {
           id: ma_vi_tri,
         },
       });
       if (checkIdPhong && checkMaViTri) {
-        let dataUpdate = {
+        const dataUpdate = {
           ten_phong,
           khach,
           phong_ngu,
@@ -207,7 +207,7 @@ export class PhongService {
           ban_ui,
           ma_vi_tri,
         };
-        let update = await this.prisma.phong.update({
+        const update = await this.prisma.phong.update({
           where: {
             id: Number(idPhong),
           },
@@ -226,12 +226,12 @@ export class PhongService {
 
   async deletePhongThueApi(idPhong, res): Promise<any> {
     try {
-      let checkIdPhong = await this.prisma.phong.findFirst({
+      const checkIdPhong = await this.prisma.phong.findFirst({
         where: {
           id: Number(idPhong),
         },
       });
-      let checkBookedRoom = await this.prisma.dat_phong.findFirst({
+      const checkBookedRoom = await this.prisma.dat_phong.findFirst({
         where: {
           ma_phong: Number(idPhong),
         },
@@ -261,21 +261,21 @@ export class PhongService {
     filename: string,
   ): Promise<any> {
     try {
-      let checkMaPhong = await this.prisma.phong.findFirst({
+      const checkMaPhong = await this.prisma.phong.findFirst({
         where: {
           id: Number(maPhong),
         },
       });
 
       if (checkMaPhong) {
-        let photo = await this.fileService.uploadPublicFile(
+        const photo = await this.fileService.uploadPublicFile(
           imageBuffer,
           filename,
         );
 
-        let imageUrl = photo.Location;
+        const imageUrl = photo.Location;
 
-        let updatedPhong = await this.prisma.phong.update({
+        const updatedPhong = await this.prisma.phong.update({
           where: {
             id: Number(maPhong),
           },

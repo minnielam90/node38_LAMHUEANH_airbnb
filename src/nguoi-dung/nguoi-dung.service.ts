@@ -13,7 +13,7 @@ export class NguoiDungService {
 
   async fetchNguoiDungApi(res): Promise<any> {
     try {
-      let getData = await this.prisma.nguoi_dung.findMany();
+      const getData = await this.prisma.nguoi_dung.findMany();
       return res.status(201).send(getData);
     } catch {
       return res.status(400).send('Không lấy được dữ liệu người dùng!');
@@ -22,16 +22,16 @@ export class NguoiDungService {
 
   async createNguoiDungApi(body: CreateNguoiDungDto, res): Promise<any> {
     try {
-      let { full_name, email, pass_word, phone, birth_day, gender, role } =
+      const { full_name, email, pass_word, phone, birth_day, gender, role } =
         body;
-      let checkEmail = await this.prisma.nguoi_dung.findFirst({
+      const checkEmail = await this.prisma.nguoi_dung.findFirst({
         where: {
           email,
         },
       });
       if (!checkEmail) {
-        let hashPassword = bcrypt.hashSync(pass_word, 10);
-        let newData = {
+        const hashPassword = bcrypt.hashSync(pass_word, 10);
+        const newData = {
           full_name,
           email,
           pass_word: hashPassword,
@@ -40,7 +40,7 @@ export class NguoiDungService {
           gender,
           role,
         };
-        let createNguoiDung = await this.prisma.nguoi_dung.create({
+        const createNguoiDung = await this.prisma.nguoi_dung.create({
           data: newData,
         });
         return res.status(200).send(createNguoiDung);
@@ -54,18 +54,18 @@ export class NguoiDungService {
 
   async deleteNguoiDungApi(id, res): Promise<any> {
     try {
-      let checkMail = await this.prisma.nguoi_dung.findFirst({
+      const checkMail = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(id),
         },
       });
-      let checkDatPhong = await this.prisma.dat_phong.findFirst({
+      const checkDatPhong = await this.prisma.dat_phong.findFirst({
         where: {
           ma_nguoi_dat: Number(id),
         },
       });
       if (checkMail && !checkDatPhong) {
-        let deleteUser = await this.prisma.nguoi_dung.delete({
+        const deleteUser = await this.prisma.nguoi_dung.delete({
           where: {
             id: Number(id),
           },
@@ -85,11 +85,11 @@ export class NguoiDungService {
 
   async phanTrangUserApi(pageIndex, pageSize, keyword, res): Promise<any> {
     try {
-      let data = await this.prisma.nguoi_dung.findMany({
+      const data = await this.prisma.nguoi_dung.findMany({
         skip: (Number(pageIndex) - 1) * Number(pageSize),
         take: Number(pageSize),
       });
-      let findKey = await this.prisma.nguoi_dung.findMany({
+      const findKey = await this.prisma.nguoi_dung.findMany({
         where: {
           full_name: {
             contains: keyword,
@@ -112,13 +112,13 @@ export class NguoiDungService {
 
   async getInfoNguoiDungTheoIdApi(id, res): Promise<any> {
     try {
-      let checkId = await this.prisma.nguoi_dung.findFirst({
+      const checkId = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(id),
         },
       });
       if (checkId) {
-        let getData = await this.prisma.nguoi_dung.findFirst({
+        const getData = await this.prisma.nguoi_dung.findFirst({
           where: {
             id: Number(id),
           },
@@ -134,21 +134,21 @@ export class NguoiDungService {
 
   async updateNguoiDungApi(body: UpdateNguoiDungDto, id, res): Promise<any> {
     try {
-      let { full_name, phone, birth_day, gender, role } = body;
-      let checkId = await this.prisma.nguoi_dung.findFirst({
+      const { full_name, phone, birth_day, gender, role } = body;
+      const checkId = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(id),
         },
       });
       if (checkId) {
-        let newUpdate = {
+        const newUpdate = {
           full_name,
           phone,
           birth_day,
           gender,
           role,
         };
-        let updateData = await this.prisma.nguoi_dung.update({
+        const updateData = await this.prisma.nguoi_dung.update({
           where: {
             id: Number(id),
           },
@@ -165,7 +165,7 @@ export class NguoiDungService {
 
   async searchNguoiDungApi(tenNguoiDung, res): Promise<any> {
     try {
-      let data = await this.prisma.nguoi_dung.findMany({
+      const data = await this.prisma.nguoi_dung.findMany({
         where: {
           full_name: {
             contains: tenNguoiDung,
@@ -188,21 +188,21 @@ export class NguoiDungService {
     filename: string,
   ): Promise<any> {
     try {
-      let checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
+      const checkMaNguoiDung = await this.prisma.nguoi_dung.findFirst({
         where: {
           id: Number(maNguoiDung),
         },
       });
 
       if (checkMaNguoiDung) {
-        let photo = await this.filesService.uploadPublicFile(
+        const photo = await this.filesService.uploadPublicFile(
           imageBuffer,
           filename,
         );
 
-        let imageUrl = photo.Location;
+        const imageUrl = photo.Location;
 
-        let updatedNguoiDung = await this.prisma.nguoi_dung.update({
+        const updatedNguoiDung = await this.prisma.nguoi_dung.update({
           where: {
             id: Number(maNguoiDung),
           },
