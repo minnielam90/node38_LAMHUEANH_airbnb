@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { CreateBinhLuanDto } from './dto/create-binh-luan.dto';
 import { UpdateBinhLuanDto } from './dto/update-binh-luan.dto';
 
 @Injectable()
 export class BinhLuanService {
-  constructor(
-    private jwtService: JwtService,
-    private configService: ConfigService,
-  ) {}
+  constructor() {}
   prisma = new PrismaClient();
 
   async fetchBinhLuanApi(res): Promise<any> {

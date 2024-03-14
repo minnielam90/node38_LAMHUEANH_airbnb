@@ -16,7 +16,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   prisma = new PrismaClient();
 
   async validate(tokenDecode: any) {
-    console.log('Token decoded:', tokenDecode);
     const { id, email, full_name } = tokenDecode.data;
 
     const checkEmail = await this.prisma.nguoi_dung.findFirst({
