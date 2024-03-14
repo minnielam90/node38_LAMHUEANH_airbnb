@@ -22,3 +22,7 @@ services:
       - node38-networks
 networks:
   node38-networks:
+
+# cập nhật docker
+# docker compose down
+# docker compose up -d --build
