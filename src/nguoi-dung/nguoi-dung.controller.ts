@@ -26,12 +26,18 @@ import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @ApiTags('NguoiDung')
 @Controller('/api/nguoi-dung')
 export class NguoiDungController {
   constructor(private readonly nguoiDungService: NguoiDungService) {}
 
+  @UseGuards(AuthGuard('jwt'),RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth()
   @Get()
   @ApiResponse({
     status: 200,

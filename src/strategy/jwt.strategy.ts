@@ -24,7 +24,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       },
     });
     if (checkEmail) {
-      return true;
+      // console.log(tokenDecode)
+      return tokenDecode;
     } else {
       return false;
     }

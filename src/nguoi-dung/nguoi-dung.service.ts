@@ -15,7 +15,8 @@ export class NguoiDungService {
     try {
       const getData = await this.prisma.nguoi_dung.findMany();
       return res.status(201).send(getData);
-    } catch {
+    } catch (err) {
+      console.log(err)
       return res.status(400).send('Không lấy được dữ liệu người dùng!');
     }
   }
