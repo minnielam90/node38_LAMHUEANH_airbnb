@@ -35,9 +35,6 @@ import { RolesGuard } from 'src/roles/roles.guard';
 export class NguoiDungController {
   constructor(private readonly nguoiDungService: NguoiDungService) {}
 
-  @UseGuards(AuthGuard('jwt'),RolesGuard)
-  @Roles(Role.ADMIN)
-  @ApiBearerAuth()
   @Get()
   @ApiResponse({
     status: 200,
@@ -109,8 +106,9 @@ export class NguoiDungController {
     return this.nguoiDungService.searchNguoiDungApi(tenNguoiDung, res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Post('/upload-avatar')
   @ApiConsumes('multipart/form-data')
   @ApiBody({

@@ -24,6 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
 
 @ApiTags('ViTri')
 @Controller('/api/vi-tri')
@@ -35,8 +38,9 @@ export class ViTriController {
     return this.viTriService.fetchViTriApi(res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   createViTri(@Body() body: CreateViTriDto, @Res() res): any {
     return this.viTriService.createViTriApi(body, res);
@@ -77,8 +81,9 @@ export class ViTriController {
     return this.viTriService.getInfoLocationBaseOnId(idViTri, res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   updateViTri(
     @Body() body: UpdateViTriDto,
@@ -88,16 +93,18 @@ export class ViTriController {
     return this.viTriService.updateLocationApi(body, idViTri, res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   deleteViTri(@Param('id') idViTri: number, @Res() res): any {
     return this.viTriService.deleteLocationApi(idViTri, res);
   }
 
   // Create hinh vi_tri
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @ApiConsumes('multipart/form-data')
   @Post('/upload-hinh-vitri')
   @ApiBody({

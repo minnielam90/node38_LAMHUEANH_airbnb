@@ -1,9 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { BinhLuanService } from './binh-luan.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateBinhLuanDto } from './dto/create-binh-luan.dto';
 import { UpdateBinhLuanDto } from './dto/update-binh-luan.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/roles/roles.decorator';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { Role } from 'src/roles/roles.enum';
 
 @ApiTags('BinhLuan')
 @Controller('/api/binh-luan')
@@ -15,15 +28,17 @@ export class BinhLuanController {
     return this.binhLuanService.fetchBinhLuanApi(res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   createBinhLuan(@Body() body: CreateBinhLuanDto, @Res() res): any {
     return this.binhLuanService.createBinhLuanApi(body, res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   updateBinhLuan(
     @Body() body: UpdateBinhLuanDto,
@@ -33,8 +48,9 @@ export class BinhLuanController {
     return this.binhLuanService.updateBinhLuan(body, idBinhLuan, res);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   deleteBinhLuan(@Param('id') idBinhLuan: number, @Res() res): any {
     return this.binhLuanService.deleteBinhLuanApi(idBinhLuan, res);
